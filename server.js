@@ -6,20 +6,22 @@ const requestListener = (request, response) => {
 
   const { method } = request;
 
-  if (method == "GET") {
+  if (method === "GET") {
     response.end("<h1>Hello!</h1>");
   }
 
-  if (method == "POST") {
-    response.end("<h1>Hai!</h1>");
-  }
+  if (method === "POST") {
+    let body = [];
 
-  if (method == "PUT") {
-    response.end("<h1>Bonjour!</h1>");
-  }
+    request.on("data", (chunk) => {
+      body.push(chunk);
+    });
 
-  if (method == "DELETE") {
-    response.end("<h1>Salam!</h1>");
+    request.on("end", () => {
+      body = Buffer.concat(body).toString();
+      console.log("body", body);
+      response.end(`<h1>Hai, ${body}!</h1>`);
+    });
   }
 };
 
